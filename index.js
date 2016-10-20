@@ -123,6 +123,6 @@ var move = function(board, playername, callback) {
 
 icacto.generateNextMove = move;
 
-icacto.connect(host, '942ba7ce-c0a7-4ad3-a8e7-7bb4b2bc5535', function(err, user) {
+icacto.connect(host, undefined, function(err, user) {
   icacto.run();
 })
