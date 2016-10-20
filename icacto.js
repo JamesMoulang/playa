@@ -79,8 +79,12 @@ var icacto = {
           var status = res.body.status;
           if(status === 'success') {
             this.game = res.body.game;
-            load.text = 'Successfully got '+this.game.name
-            return callback(undefined, this.game)
+            if(!this.game) {
+              return callback({status: this.errors.NO_GAME, message: 'No game for some reason'});
+            } else {
+              load.text = 'Successfully got '+this.game.name
+              return callback(undefined, this.game)
+            }
           } else {
             callback({status: this.errors.HOST_REJECTION, message: res.body.message});
           }
