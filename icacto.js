@@ -136,7 +136,7 @@ var icacto = {
         load.text = 'Game is still waiting for another player';
         setTimeout(function() {
           this.getGame(function(err, game) {
-            if(err) return console.error(err);
+            if(err) console.error(err);
             this.run();
           }.bind(this))
         }.bind(this), timeout);
@@ -144,7 +144,7 @@ var icacto = {
         load.text = 'Game is finished so will request a new one';
         setTimeout(function() {
           this.getUser(function(err, user) {
-            if(err) return console.error(err);
+            if(err) console.error(err);
             this.run();
           }.bind(this))
         }.bind(this), timeout);
@@ -153,14 +153,14 @@ var icacto = {
           load.text = 'Waiting my turn';
           setTimeout(function() {
             this.getGame(function(err, game) {
-              if(err) return console.error(err);
+              if(err) console.error(err);
               this.run();
             }.bind(this))
           }.bind(this), timeout);
         } else {
           this.generateNextMove(this.game.board, this.user.name, function(move) {
             this.makePlay(move, function(err, result) {
-              if(err) return console.error(err);
+              if(err) console.error(err);
               this.run();
             }.bind(this))
           }.bind(this))
