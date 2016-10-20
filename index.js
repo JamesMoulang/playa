@@ -23,42 +23,106 @@ var move = function(board, playername, callback) {
 
 	//Look for winning moves.
 	var played = false;
-	for (var i = 0; i < lines.length; i++) {
-		var points = lines[i];
-		var empties = [];
-		var count = 0;
-		for (var p = 0; p < points.length; p++) {
-			var position = getPosition(p.x, p.y);
-			if (position === null) {
-				empties.push(p);
-			} else if (getPosition(p.x, p.y) == playername) {
-				count++;
+
+	var emptySquares = 0;
+	for (var x = 0; x < 3; x++) {
+		for (var y = 0; y < 3; y++) {
+			if (getPosition(x, y) === null) {
+				emptySquares++;
 			}
 		}
+	}
 
-		if (count == 2) {
-			callback(empties[0]);
-			played = true;
+	if (emptySquares == 9) {
+		played = true;
+		callback({x: 1, y: 1});
+	}
+
+	if (!played) {
+		for (var i = 0; i < lines.length; i++) {
+			var points = lines[i];
+			var empties = [];
+			var count = 0;
+			for (var _p = 0; _p < points.length; _p++) {
+				var p = points[_p];
+				var position = getPosition(p.x, p.y);
+				if (position === null) {
+					empties.push(p);
+				} else if (getPosition(p.x, p.y) == playername) {
+					count++;
+				}
+			}
+
+			if (count == 2 && empties.length > 0) {
+				callback(empties[0]);
+				played = true;
+			}
+		}
+	}
+
+	//Look for defensive blocks.
+	if (!played) {
+		for (var i = 0; i < lines.length; i++) {
+			var points = lines[i];
+			var empties = [];
+			var count = 0;
+			for (var _p = 0; _p < points.length; _p++) {
+				var p = points[_p];
+				var position = getPosition(p.x, p.y);
+				if (position === null) {
+					empties.push(p);
+				} else if (getPosition(p.x, p.y) != playername) {
+					count++;
+				}
+			}
+
+			if (count == 2 && empties.length > 0) {
+				console.log("playing defensively.");
+				callback(empties[0]);
+				played = true;
+			}
 		}
 	}
 
 	if (!played) {
+		for (var i = 0; i < lines.length; i++) {
+			var points = lines[i];
+			var empties = [];
+			var count = 0;
+			for (var _p = 0; _p < points.length; _p++) {
+				var p = points[_p];
+				var position = getPosition(p.x, p.y);
+				if (position === null) {
+					empties.push(p);
+				} else if (getPosition(p.x, p.y) == playername) {
+					count++;
+				} else {
+					count--;
+				}
+			}
 
+			if (count > 0 && empties.length > 0) {
+				callback(empties[Math.floor(Math.random() * empties.length)]);
+				played = true;
+			}
+		}
 	}
 
-	load.text = 'Doing silly random move thing';
-    var x, y;
-    var position = 'something'
-    while(position !== null) {
-      x = Math.floor(Math.random() * 3);
-      y = Math.floor(Math.random() * 3);
-      position = board[y][x]
-    }
-    callback({x: x, y: y})
+	if (!played) {
+		console.log("playing random.");
+	    var x, y;
+	    var position = 'something'
+	    while(position !== null) {
+	      x = Math.floor(Math.random() * 3);
+	      y = Math.floor(Math.random() * 3);
+	      position = board[y][x]
+	    }
+	    callback({x: x, y: y})
+	}
 }
 
-icacto.generateMove = move;
+icacto.generateNextMove = move;
 
-icacto.connect(host, undefined, function(err, user) {
+icacto.connect(host, '942ba7ce-c0a7-4ad3-a8e7-7bb4b2bc5535', function(err, user) {
   icacto.run();
 })
